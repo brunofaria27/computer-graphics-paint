@@ -39,6 +39,12 @@ class Application:
 
         self.window.mainloop()
 
+    '''
+        Evento de pegar clique no canvas e setar os pontos selecionados.
+        O primeiro clique preenche valores da variavel value_first_point
+        o segundo preenche value_second_point e os próximos cliques seguem
+        a ordem value_first_point -> value_second_point.
+    '''
     def get_coordinates(self, event):
         x = event.x - self.canvas.winfo_width()/2
         y = -1 * (event.y - self.canvas.winfo_height()/2)
@@ -49,5 +55,4 @@ class Application:
         else:
             self.value_second_point = (x, y)
             self.second_point_text.set(f"Ponto 2: {self.value_second_point}")
-
         self.point_count += 1

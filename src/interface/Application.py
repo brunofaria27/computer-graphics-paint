@@ -5,7 +5,7 @@ class Application:
         self.window = window
         self.window.title(window_title)
 
-        # Definir o tamanho inicial da janela e centralizá-la na tela
+        # Definir o tamanho inicial da janela e canvas e centralizá-la na tela
         screen_width = self.window.winfo_screenwidth()
         screen_height = self.window.winfo_screenheight()
         initial_width = int(screen_width * 0.7)

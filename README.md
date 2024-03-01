@@ -9,7 +9,7 @@ A aplicação foi feita com o intuito de abordar o seguintes algoritmos de compu
     - Reflexões **X/Y/XY**
 - Rasterização:
     - Retas:
-        - DDA
+        - DDA ✔️
         - Bresenham
     - Circunferência:
         - Bresenham

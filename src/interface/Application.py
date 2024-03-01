@@ -1,5 +1,7 @@
 import tkinter as tk
 
+from interface.FunctionsCaller import FunctionsCaller
+
 class Application:
     def __init__(self, window, window_title):
         self.window = window
@@ -30,10 +32,23 @@ class Application:
         self.second_point_label.pack()
 
         # Inicializar variáveis importantes
-        self.value_first_point = None
-        self.value_second_point = None
+        self.value_first_point = tuple()
+        self.value_second_point = tuple()
         self.point_count = 0
 
+        # Inicializar objetos importantes
+        functions_caller = FunctionsCaller()
+
+        # Opções do menu
+        self.rasterization = tk.Menu(window)
+        window.config(menu=self.rasterization)
+
+        self.rasterization_menu = tk.Menu(self.rasterization)
+        self.rasterization.add_cascade(label="Rasterização", menu=self.rasterization_menu)
+        self.rasterization_menu.add_command(label="DDA", command=lambda: functions_caller.caller_line_dda(self.canvas, self.value_first_point, self.value_second_point))
+        self.rasterization_menu.add_command(label="Bresenham retas", command=lambda: functions_caller.caller_line_dda(self.canvas, self.value_first_point, self.value_second_point))
+        self.rasterization_menu.add_command(label="Bresenham circunferência", command=lambda: functions_caller.caller_line_dda(self.canvas, self.value_first_point, self.value_second_point))
+    
         # Configurar evento de clique no canvas
         self.canvas.bind("<Button-1>", self.get_coordinates)
 
@@ -46,8 +61,8 @@ class Application:
         a ordem value_first_point -> value_second_point.
     '''
     def get_coordinates(self, event):
-        x = event.x - self.canvas.winfo_width()/2
-        y = -1 * (event.y - self.canvas.winfo_height()/2)
+        x = event.x
+        y = event.y
 
         if self.point_count % 2 == 0:
             self.value_first_point = (x, y)

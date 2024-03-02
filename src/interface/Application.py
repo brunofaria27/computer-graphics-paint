@@ -46,7 +46,7 @@ class Application:
         self.rasterization_menu = tk.Menu(self.rasterization)
         self.rasterization.add_cascade(label="Rasterização", menu=self.rasterization_menu)
         self.rasterization_menu.add_command(label="DDA", command=lambda: functions_caller.caller_line_dda(self.canvas, self.value_first_point, self.value_second_point))
-        self.rasterization_menu.add_command(label="Bresenham retas", command=lambda: functions_caller.caller_line_dda(self.canvas, self.value_first_point, self.value_second_point))
+        self.rasterization_menu.add_command(label="Bresenham retas", command=lambda: functions_caller.caller_line_bresenham(self.canvas, self.value_first_point, self.value_second_point))
         self.rasterization_menu.add_command(label="Bresenham circunferência", command=lambda: functions_caller.caller_line_dda(self.canvas, self.value_first_point, self.value_second_point))
     
         # Configurar evento de clique no canvas

@@ -10,9 +10,9 @@ A aplicação foi feita com o intuito de abordar o seguintes algoritmos de compu
 - Rasterização:
     - Retas:
         - DDA ✔️
-        - Bresenham
+        - Bresenham ✔️
     - Circunferência:
-        - Bresenham
+        - Bresenham ✔️
 - Recorte:
     - Regiões codificadas:
         - Cohen-Sutherland

@@ -18,6 +18,15 @@ class Application:
         y = (screen_height - initial_height) // 2
         self.window.geometry(f"{initial_width}x{initial_height}+{x}+{y}")
 
+        # Input radius
+        self.radius_frame = tk.Frame(self.window)
+        self.radius_frame.pack()
+
+        self.radius_label = tk.Label(self.radius_frame, text="Radius para circunferência Bresenham:")
+        self.radius_label.grid(row=0, column=0)
+        self.radius_entry = tk.Entry(self.radius_frame)
+        self.radius_entry.grid(row=0, column=1)
+
         # Criar o canvas com borda
         self.canvas = tk.Canvas(self.window, bg="white", width=canvas_width, height=canvas_height, bd=2, relief="ridge")
         self.canvas.pack()
@@ -40,15 +49,22 @@ class Application:
         functions_caller = FunctionsCaller()
 
         # Opções do menu
-        self.rasterization = tk.Menu(window)
-        window.config(menu=self.rasterization)
+        self.menu = tk.Menu(window)
+        window.config(menu=self.menu)
 
-        self.rasterization_menu = tk.Menu(self.rasterization)
-        self.rasterization.add_cascade(label="Rasterização", menu=self.rasterization_menu)
+        self.rasterization_menu = tk.Menu(self.menu)
+        self.menu.add_cascade(label="Rasterização", menu=self.rasterization_menu)
         self.rasterization_menu.add_command(label="DDA", command=lambda: functions_caller.caller_line_dda(self.canvas, self.value_first_point, self.value_second_point))
         self.rasterization_menu.add_command(label="Bresenham retas", command=lambda: functions_caller.caller_line_bresenham(self.canvas, self.value_first_point, self.value_second_point))
-        self.rasterization_menu.add_command(label="Bresenham circunferência", command=lambda: functions_caller.caller_line_dda(self.canvas, self.value_first_point, self.value_second_point))
-    
+        self.rasterization_menu.add_command(label="Bresenham circunferência", command=lambda: functions_caller.caller_circle_bresenham(self.canvas, self.value_first_point, int(self.radius_entry.get())))
+
+        self.transformation_menu = tk.Menu(self.menu)
+        self.menu.add_cascade(label="Transformações geométricas", menu=self.transformation_menu)
+        self.transformation_menu.add_command(label="Translação", command=lambda: functions_caller.caller_line_dda(self.canvas, self.value_first_point, self.value_second_point))
+        self.transformation_menu.add_command(label="Rotação", command=lambda: functions_caller.caller_line_bresenham(self.canvas, self.value_first_point, self.value_second_point))
+        self.transformation_menu.add_command(label="Escala", command=lambda: functions_caller.caller_circle_bresenham(self.canvas, self.value_first_point, int(self.radius_entry.get())))
+        self.transformation_menu.add_command(label="Reflexâo", command=lambda: functions_caller.caller_circle_bresenham(self.canvas, self.value_first_point, int(self.radius_entry.get())))
+
         # Configurar evento de clique no canvas
         self.canvas.bind("<Button-1>", self.get_coordinates)
 

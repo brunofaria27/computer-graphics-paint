@@ -1,4 +1,5 @@
 import tkinter as tk
+from graphics.clipping import clipping_cohen_sutherland
 
 from interface.FunctionsCaller import FunctionsCaller
 
@@ -64,6 +65,11 @@ class Application:
         self.transformation_menu.add_command(label="Rotação", command=lambda: functions_caller.caller_line_bresenham(self.canvas, self.value_first_point, self.value_second_point))
         self.transformation_menu.add_command(label="Escala", command=lambda: functions_caller.caller_circle_bresenham(self.canvas, self.value_first_point, int(self.radius_scale.get())))
         self.transformation_menu.add_command(label="Reflexâo", command=lambda: functions_caller.caller_circle_bresenham(self.canvas, self.value_first_point, int(self.radius_scale.get())))
+
+        self.clipping_menu = tk.Menu(self.menu)
+        self.menu.add_cascade(label="Clipping", menu=self.clipping_menu)
+        self.clipping_menu.add_command(label="Cohen-Sutherland", command=lambda: functions_caller.caller_clipping_cohen_sutherland(self.canvas, self.value_first_point, self.value_second_point, (0, 0), (0, 0)))
+        self.clipping_menu.add_command(label="Liang-Barsky", command=lambda: functions_caller.caller_clipping_cohen_sutherland(self.canvas, self.value_first_point, self.value_second_point, (0, 0), (0, 0)))
 
         self.clear_canvas_menu = tk.Menu(self.menu)
         self.menu.add_cascade(label="Funções", menu=self.clear_canvas_menu)

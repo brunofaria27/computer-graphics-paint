@@ -18,14 +18,14 @@ class Application:
         y = (screen_height - initial_height) // 2
         self.window.geometry(f"{initial_width}x{initial_height}+{x}+{y}")
 
-        # Input radius
+        # Slide input radius
         self.radius_frame = tk.Frame(self.window)
         self.radius_frame.pack()
 
-        self.radius_label = tk.Label(self.radius_frame, text="Radius para circunferência Bresenham:")
+        self.radius_label = tk.Label(self.radius_frame, text="Raio para circunferência Bresenham (1-100):")
         self.radius_label.grid(row=0, column=0)
-        self.radius_entry = tk.Entry(self.radius_frame)
-        self.radius_entry.grid(row=0, column=1)
+        self.radius_scale = tk.Scale(self.radius_frame, from_=1, to=100, orient=tk.HORIZONTAL)
+        self.radius_scale.grid(row=0, column=1)
 
         # Criar o canvas com borda
         self.canvas = tk.Canvas(self.window, bg="white", width=canvas_width, height=canvas_height, bd=2, relief="ridge")
@@ -56,18 +56,21 @@ class Application:
         self.menu.add_cascade(label="Rasterização", menu=self.rasterization_menu)
         self.rasterization_menu.add_command(label="DDA", command=lambda: functions_caller.caller_line_dda(self.canvas, self.value_first_point, self.value_second_point))
         self.rasterization_menu.add_command(label="Bresenham retas", command=lambda: functions_caller.caller_line_bresenham(self.canvas, self.value_first_point, self.value_second_point))
-        self.rasterization_menu.add_command(label="Bresenham circunferência", command=lambda: functions_caller.caller_circle_bresenham(self.canvas, self.value_first_point, int(self.radius_entry.get())))
+        self.rasterization_menu.add_command(label="Bresenham circunferência", command=lambda: functions_caller.caller_circle_bresenham(self.canvas, self.value_first_point, int(self.radius_scale.get())))
 
         self.transformation_menu = tk.Menu(self.menu)
         self.menu.add_cascade(label="Transformações geométricas", menu=self.transformation_menu)
         self.transformation_menu.add_command(label="Translação", command=lambda: functions_caller.caller_line_dda(self.canvas, self.value_first_point, self.value_second_point))
         self.transformation_menu.add_command(label="Rotação", command=lambda: functions_caller.caller_line_bresenham(self.canvas, self.value_first_point, self.value_second_point))
-        self.transformation_menu.add_command(label="Escala", command=lambda: functions_caller.caller_circle_bresenham(self.canvas, self.value_first_point, int(self.radius_entry.get())))
-        self.transformation_menu.add_command(label="Reflexâo", command=lambda: functions_caller.caller_circle_bresenham(self.canvas, self.value_first_point, int(self.radius_entry.get())))
+        self.transformation_menu.add_command(label="Escala", command=lambda: functions_caller.caller_circle_bresenham(self.canvas, self.value_first_point, int(self.radius_scale.get())))
+        self.transformation_menu.add_command(label="Reflexâo", command=lambda: functions_caller.caller_circle_bresenham(self.canvas, self.value_first_point, int(self.radius_scale.get())))
+
+        self.clear_canvas_menu = tk.Menu(self.menu)
+        self.menu.add_cascade(label="Funções", menu=self.clear_canvas_menu)
+        self.clear_canvas_menu.add_command(label="Apagar tudo", command=self.clear_canvas)
 
         # Configurar evento de clique no canvas
         self.canvas.bind("<Button-1>", self.get_coordinates)
-
         self.window.mainloop()
 
     '''
@@ -87,3 +90,10 @@ class Application:
             self.value_second_point = (x, y)
             self.second_point_text.set(f"Ponto 2: {self.value_second_point}")
         self.point_count += 1
+
+    '''
+        Função usada para limpar toda a tela de desenhos feita pelo
+        usuário.
+    '''
+    def clear_canvas(self):
+        self.canvas.delete("all")

@@ -1,5 +1,13 @@
 from utils.pixel import set_pixel
 
+'''
+    Algoritmo DDA para desenhar uma linha entre dois pontos no canvas.
+
+    Args:
+        canvas: O widget Canvas onde a linha será desenhada.
+        first_point: Uma tupla representando as coordenadas (x, y) do primeiro ponto.
+        second_point: Uma tupla representando as coordenadas (x, y) do segundo ponto.
+'''
 def line_dda(canvas, first_point: tuple, second_point: tuple) -> None:
     dx = second_point[0] - first_point[0]
     dy = second_point[1] - first_point[1]
@@ -18,6 +26,14 @@ def line_dda(canvas, first_point: tuple, second_point: tuple) -> None:
         y += y_incr
         set_pixel(canvas, round(x), round(y))
 
+'''
+    Algoritmo de Bresenham para desenhar uma linha entre dois pontos no canvas.
+
+    Args:
+        canvas: O widget Canvas onde a linha será desenhada.
+        first_point: Uma tupla representando as coordenadas (x, y) do primeiro ponto.
+        second_point: Uma tupla representando as coordenadas (x, y) do segundo ponto.
+'''
 def line_bresenham(canvas, first_point: tuple, second_point: tuple) -> None:
     dx = abs(second_point[0] - first_point[0])
     dy = abs(second_point[1] - first_point[1])

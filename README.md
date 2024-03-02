@@ -3,10 +3,10 @@
 A aplicação foi feita com o intuito de abordar o seguintes algoritmos de computação gráfica:
 
 - Transformações geométricas 2D:
-    - Translação
-    - Rotação
-    - Escala
-    - Reflexões **X/Y/XY**
+    - Translação 🔄
+    - Rotação 🔄
+    - Escala 🔄
+    - Reflexões **X/Y/XY** 🔄
 - Rasterização:
     - Retas:
         - DDA ✔️
@@ -15,9 +15,8 @@ A aplicação foi feita com o intuito de abordar o seguintes algoritmos de compu
         - Bresenham ✔️
 - Recorte:
     - Regiões codificadas:
-        - Cohen-Sutherland
+        - Cohen-Sutherland 🔄
     - Equação paramétrica:
-        - Liang-Barsky
-
+        - Liang-Barsky ⚠️☠️🚨
 ------
 ### Estrutura da aplicação

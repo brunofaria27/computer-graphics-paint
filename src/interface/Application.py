@@ -1,5 +1,4 @@
 import tkinter as tk
-from graphics.clipping import clipping_cohen_sutherland
 
 from interface.FunctionsCaller import FunctionsCaller
 
@@ -41,10 +40,21 @@ class Application:
         self.second_point_label = tk.Label(self.window, textvariable=self.second_point_text)
         self.second_point_label.pack()
 
+        self.rectangle_first_point_text = tk.StringVar()
+        self.rectangle_first_point_label = tk.Label(self.window, textvariable=self.rectangle_first_point_text)
+        self.rectangle_first_point_label.pack()
+
+        self.rectangle_second_point_text = tk.StringVar()
+        self.rectangle_second_point_label = tk.Label(self.window, textvariable=self.rectangle_second_point_text)
+        self.rectangle_second_point_label.pack()
+
         # Inicializar variáveis importantes
         self.value_first_point = tuple()
         self.value_second_point = tuple()
+        self.value_rectangle_first = tuple()
+        self.value_rectangle_second = tuple()
         self.point_count = 0
+        self.rectangle_point_count = 0
 
         # Inicializar objetos importantes
         functions_caller = FunctionsCaller()
@@ -68,7 +78,7 @@ class Application:
 
         self.clipping_menu = tk.Menu(self.menu)
         self.menu.add_cascade(label="Clipping", menu=self.clipping_menu)
-        self.clipping_menu.add_command(label="Cohen-Sutherland", command=lambda: functions_caller.caller_clipping_cohen_sutherland(self.canvas, self.value_first_point, self.value_second_point, (0, 0), (0, 0)))
+        self.clipping_menu.add_command(label="Cohen-Sutherland", command=lambda: functions_caller.caller_clipping_cohen_sutherland(self.canvas, self.value_first_point, self.value_second_point, self.value_rectangle_first, self.value_rectangle_second))
         self.clipping_menu.add_command(label="Liang-Barsky", command=lambda: functions_caller.caller_clipping_cohen_sutherland(self.canvas, self.value_first_point, self.value_second_point, (0, 0), (0, 0)))
 
         self.clear_canvas_menu = tk.Menu(self.menu)
@@ -77,6 +87,7 @@ class Application:
 
         # Configurar evento de clique no canvas
         self.canvas.bind("<Button-1>", self.get_coordinates)
+        self.canvas.bind("<Button-3>", self.get_coordinates_rectangle)
         self.window.mainloop()
 
     '''
@@ -96,6 +107,24 @@ class Application:
             self.value_second_point = (x, y)
             self.second_point_text.set(f"Ponto 2: {self.value_second_point}")
         self.point_count += 1
+    
+    '''
+        Evento de pegar clique no canvas e setar os pontos selecionados.
+        O primeiro clique preenche valores da variavel value_rectangle_first
+        o segundo preenche value_rectangle_second e os próximos cliques seguem
+        a ordem value_rectangle_first -> value_rectangle_second.
+    '''
+    def get_coordinates_rectangle(self, event):
+        x = event.x
+        y = event.y
+
+        if self.rectangle_point_count % 2 == 0:
+            self.value_rectangle_first = (x, y)
+            self.rectangle_first_point_text.set(f"Ponto 1 do retângulo: {self.value_rectangle_first}")
+        else:
+            self.value_rectangle_second = (x, y)
+            self.rectangle_second_point_text.set(f"Ponto 2 do retângulo: {self.value_rectangle_second}")
+        self.rectangle_point_count += 1
 
     '''
         Função usada para limpar toda a tela de desenhos feita pelo

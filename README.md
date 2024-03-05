@@ -15,7 +15,7 @@ A aplicação foi feita com o intuito de abordar o seguintes algoritmos de compu
         - Bresenham ✔️
 - Recorte:
     - Regiões codificadas:
-        - Cohen-Sutherland 🔄
+        - Cohen-Sutherland ✔️
     - Equação paramétrica:
         - Liang-Barsky ⚠️☠️🚨
 ------

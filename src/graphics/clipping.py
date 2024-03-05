@@ -45,37 +45,33 @@ def clipping_cohen_sutherland(first_point: tuple, second_point: tuple, x_limits:
     x_min, x_max = x_limits
     y_min, y_max = y_limits
     is_accepted = False
-    done = False
 
-    while not done:
+    while True:
         first_outcode = region_code(x1, y1, x_min, x_max, y_min, y_max)
         second_outcode = region_code(x2, y2, x_min, x_max, y_min, y_max)
 
         if first_outcode == 0 and second_outcode == 0:
             is_accepted = True
-            done = True
-        elif first_outcode & second_outcode:
-            done = True
+            break
+        elif (first_outcode & second_outcode) != 0: break
         else:
             outcode = first_outcode if first_outcode else second_outcode
 
             if outcode & 1:
-                new_x = x1 + (x2 - x1) * (y_max - y1) / (y2 - y1)
-                new_y = y_max
-            elif outcode & 2:
-                new_x = x1 + (x2 - x1) * (y_min - y1) / (y2 - y1)
-                new_y = y_min
-            elif outcode & 4:
-                new_y = y1 + (y2 - y1) * (x_max - x1) / (x2 - x1)
-                new_x = x_max
-            elif outcode & 8:
                 new_y = y1 + (y2 - y1) * (x_min - x1) / (x2 - x1)
                 new_x = x_min
+            elif outcode & 2:
+                new_y = y1 + (y2 - y1) * (x_max - x1) / (x2 - x1)
+                new_x = x_max
+            elif outcode & 4:
+                new_x = x1 + (x2 - x1) * (y_min - y1) / (y2 - y1)
+                new_y = y_min
+            elif outcode & 8:
+                new_x = x1 + (x2 - x1) * (y_max - y1) / (y2 - y1)
+                new_y = y_max
 
-            if outcode == first_outcode:
-                x1, y1 = new_x, new_y
-            else:
-                x2, y2 = new_x, new_y
+            if outcode == first_outcode: x1, y1 = new_x, new_y
+            else: x2, y2 = new_x, new_y
 
     return is_accepted, (x1, y1), (x2, y2)
  

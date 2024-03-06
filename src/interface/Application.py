@@ -11,7 +11,7 @@ class Application:
         screen_width = self.window.winfo_screenwidth()
         screen_height = self.window.winfo_screenheight()
         initial_width = int(screen_width * 0.7)
-        initial_height = int(screen_height * 0.7)
+        initial_height = int(screen_height * 0.8)
         canvas_width = int(screen_width * 0.5)
         canvas_height = int(screen_height * 0.5)
         x = (screen_width - initial_width) // 2
@@ -26,6 +26,22 @@ class Application:
         self.radius_label.grid(row=0, column=0)
         self.radius_scale = tk.Scale(self.radius_frame, from_=1, to=100, orient=tk.HORIZONTAL)
         self.radius_scale.grid(row=0, column=1)
+
+        # Slide dx, dy -> translate
+        self.dx_translate = tk.Frame(self.window)
+        self.dx_translate.pack()
+        self.dy_translate = tk.Frame(self.window)
+        self.dy_translate.pack()
+
+        self.dx_label = tk.Label(self.dx_translate, text="DX Translate:")
+        self.dx_label.grid(row=1, column=0)
+        self.dx_scale = tk.Scale(self.dx_translate, from_=1, to=200, orient=tk.HORIZONTAL)
+        self.dx_scale.grid(row=1, column=1)
+
+        self.dy_label = tk.Label(self.dy_translate, text="DY Translate:")
+        self.dy_label.grid(row=1, column=0)
+        self.dy_scale = tk.Scale(self.dy_translate, from_=1, to=200, orient=tk.HORIZONTAL)
+        self.dy_scale.grid(row=1, column=1)
 
         # Criar o canvas com borda
         self.canvas = tk.Canvas(self.window, bg="white", width=canvas_width, height=canvas_height, bd=2, relief="ridge")
@@ -48,11 +64,16 @@ class Application:
         self.rectangle_second_point_label = tk.Label(self.window, textvariable=self.rectangle_second_point_text)
         self.rectangle_second_point_label.pack()
 
+        self.center_point_text = tk.StringVar()
+        self.center_point_label = tk.Label(self.window, textvariable=self.center_point_text)
+        self.center_point_label.pack()
+
         # Inicializar variáveis importantes
         self.value_first_point = tuple()
         self.value_second_point = tuple()
         self.value_rectangle_first = tuple()
         self.value_rectangle_second = tuple()
+        self.value_center_point = tuple()
         self.point_count = 0
         self.rectangle_point_count = 0
 
@@ -71,10 +92,12 @@ class Application:
 
         self.transformation_menu = tk.Menu(self.menu)
         self.menu.add_cascade(label="Transformações geométricas", menu=self.transformation_menu)
-        self.transformation_menu.add_command(label="Translação", command=lambda: functions_caller.caller_line_dda(self.canvas, self.value_first_point, self.value_second_point))
-        self.transformation_menu.add_command(label="Rotação", command=lambda: functions_caller.caller_line_bresenham(self.canvas, self.value_first_point, self.value_second_point))
-        self.transformation_menu.add_command(label="Escala", command=lambda: functions_caller.caller_circle_bresenham(self.canvas, self.value_first_point, int(self.radius_scale.get())))
-        self.transformation_menu.add_command(label="Reflexâo", command=lambda: functions_caller.caller_circle_bresenham(self.canvas, self.value_first_point, int(self.radius_scale.get())))
+        self.transformation_menu.add_command(label="Translação", command=lambda: functions_caller.transform_and_drawn(self.canvas, ))
+        self.transformation_menu.add_command(label="Rotação", command=lambda: functions_caller.transform_and_drawn(self.canvas, ))
+        self.transformation_menu.add_command(label="Escala", command=lambda: functions_caller.transform_and_drawn(self.canvas, ))
+        self.transformation_menu.add_command(label="Reflexâo X", command=lambda: functions_caller.transform_and_drawn(self.canvas, ))
+        self.transformation_menu.add_command(label="Reflexâo Y", command=lambda: functions_caller.transform_and_drawn(self.canvas, ))
+        self.transformation_menu.add_command(label="Reflexâo XY", command=lambda: functions_caller.transform_and_drawn(self.canvas, ))
 
         self.clipping_menu = tk.Menu(self.menu)
         self.menu.add_cascade(label="Clipping", menu=self.clipping_menu)
@@ -87,8 +110,20 @@ class Application:
 
         # Configurar evento de clique no canvas
         self.canvas.bind("<Button-1>", self.get_coordinates)
+        self.canvas.bind("<Button-2>", self.central_coords)
         self.canvas.bind("<Button-3>", self.get_coordinates_rectangle)
         self.window.mainloop()
+
+    """
+        Evento para pegar o ponto origem que será utilizado para as 
+        funções de transformação no decorrer da interface.
+    """
+    def central_coords(self, event):
+        x = event.x
+        y = event.y
+
+        self.value_center_point = (x, y)
+        self.center_point_text.set(f"Ponto origem selecionado: {self.value_center_point}")
 
     '''
         Evento de pegar clique no canvas e setar os pontos selecionados.

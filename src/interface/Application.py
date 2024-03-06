@@ -114,9 +114,9 @@ class Application:
         self.transformation_menu.add_command(label="Translação", command=lambda: self.transform_and_drawn(lambda points: translate(points, int(self.dx_scale.get()), int(self.dy_scale.get()))))
         self.transformation_menu.add_command(label="Rotação", command=lambda: self.transform_and_drawn(lambda points: rotate(points, int(self.angle_transformation_scale.get()), self.value_center_point)))
         self.transformation_menu.add_command(label="Escala", command=lambda: self.transform_and_drawn(lambda points: scale(points, float(self.scale_factor_entry.get()), self.value_center_point)))
-        self.transformation_menu.add_command(label="Reflexão X", command=lambda: self.transform_and_drawn(lambda points: reflect_x(points, self.value_center_point)))
-        self.transformation_menu.add_command(label="Reflexão Y", command=lambda: self.transform_and_drawn(lambda points: reflect_y(points, self.value_center_point)))
-        self.transformation_menu.add_command(label="Reflexão XY", command=lambda: self.transform_and_drawn(lambda points: reflect_xy(points, self.value_center_point)))
+        self.transformation_menu.add_command(label="Reflexão X", command=lambda: self.transform_and_drawn(lambda points: reflect_x(points)))
+        self.transformation_menu.add_command(label="Reflexão Y", command=lambda: self.transform_and_drawn(lambda points: reflect_y(points)))
+        self.transformation_menu.add_command(label="Reflexão XY", command=lambda: self.transform_and_drawn(lambda points: reflect_xy(points)))
 
         self.clipping_menu = tk.Menu(self.menu)
         self.menu.add_cascade(label="Clipping", menu=self.clipping_menu)

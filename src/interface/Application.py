@@ -1,4 +1,5 @@
 import tkinter as tk
+from graphics.transformations import reflect_x, reflect_xy, reflect_y, rotate, scale, translate
 
 from interface.FunctionsCaller import FunctionsCaller
 
@@ -11,7 +12,7 @@ class Application:
         screen_width = self.window.winfo_screenwidth()
         screen_height = self.window.winfo_screenheight()
         initial_width = int(screen_width * 0.7)
-        initial_height = int(screen_height * 0.8)
+        initial_height = int(screen_height * 0.85)
         canvas_width = int(screen_width * 0.5)
         canvas_height = int(screen_height * 0.5)
         x = (screen_width - initial_width) // 2
@@ -33,15 +34,33 @@ class Application:
         self.dy_translate = tk.Frame(self.window)
         self.dy_translate.pack()
 
-        self.dx_label = tk.Label(self.dx_translate, text="DX Translate:")
+        self.dx_label = tk.Label(self.dx_translate, text="DX:")
         self.dx_label.grid(row=1, column=0)
-        self.dx_scale = tk.Scale(self.dx_translate, from_=1, to=200, orient=tk.HORIZONTAL)
+        self.dx_scale = tk.Scale(self.dx_translate, from_=(-200), to=200, orient=tk.HORIZONTAL)
         self.dx_scale.grid(row=1, column=1)
 
-        self.dy_label = tk.Label(self.dy_translate, text="DY Translate:")
+        self.dy_label = tk.Label(self.dy_translate, text="DY:")
         self.dy_label.grid(row=1, column=0)
-        self.dy_scale = tk.Scale(self.dy_translate, from_=1, to=200, orient=tk.HORIZONTAL)
+        self.dy_scale = tk.Scale(self.dy_translate, from_=(-200), to=200, orient=tk.HORIZONTAL)
         self.dy_scale.grid(row=1, column=1)
+
+        # Slide para pegar angulo
+        self.angle_transformation = tk.Frame(self.window)
+        self.angle_transformation.pack()
+
+        self.angle_transformation_label = tk.Label(self.angle_transformation, text="Ângulo:")
+        self.angle_transformation_label.grid(row=2, column=0)
+        self.angle_transformation_scale = tk.Scale(self.angle_transformation, from_=0, to=360, orient=tk.HORIZONTAL)
+        self.angle_transformation_scale.grid(row=2, column=1)
+
+        # Entrada fator de escala
+        self.scale_factor = tk.Frame(self.window)
+        self.scale_factor.pack()
+
+        self.scale_factor_label = tk.Label(self.scale_factor, text="Fator da escala:")
+        self.scale_factor_label.grid(row=4, column=0)
+        self.scale_factor_entry = tk.Entry(self.scale_factor)
+        self.scale_factor_entry.grid(row=4, column=1)
 
         # Criar o canvas com borda
         self.canvas = tk.Canvas(self.window, bg="white", width=canvas_width, height=canvas_height, bd=2, relief="ridge")
@@ -92,12 +111,12 @@ class Application:
 
         self.transformation_menu = tk.Menu(self.menu)
         self.menu.add_cascade(label="Transformações geométricas", menu=self.transformation_menu)
-        self.transformation_menu.add_command(label="Translação", command=lambda: functions_caller.transform_and_drawn(self.canvas, ))
-        self.transformation_menu.add_command(label="Rotação", command=lambda: functions_caller.transform_and_drawn(self.canvas, ))
-        self.transformation_menu.add_command(label="Escala", command=lambda: functions_caller.transform_and_drawn(self.canvas, ))
-        self.transformation_menu.add_command(label="Reflexâo X", command=lambda: functions_caller.transform_and_drawn(self.canvas, ))
-        self.transformation_menu.add_command(label="Reflexâo Y", command=lambda: functions_caller.transform_and_drawn(self.canvas, ))
-        self.transformation_menu.add_command(label="Reflexâo XY", command=lambda: functions_caller.transform_and_drawn(self.canvas, ))
+        self.transformation_menu.add_command(label="Translação", command=lambda: self.transform_and_drawn(lambda points: translate(points, int(self.dx_scale.get()), int(self.dy_scale.get()))))
+        self.transformation_menu.add_command(label="Rotação", command=lambda: self.transform_and_drawn(lambda points: rotate(points, int(self.angle_transformation_scale.get()), self.value_center_point)))
+        self.transformation_menu.add_command(label="Escala", command=lambda: self.transform_and_drawn(lambda points: scale(points, float(self.scale_factor_entry.get()), self.value_center_point)))
+        self.transformation_menu.add_command(label="Reflexão X", command=lambda: self.transform_and_drawn(lambda points: reflect_x(points, self.value_center_point)))
+        self.transformation_menu.add_command(label="Reflexão Y", command=lambda: self.transform_and_drawn(lambda points: reflect_y(points, self.value_center_point)))
+        self.transformation_menu.add_command(label="Reflexão XY", command=lambda: self.transform_and_drawn(lambda points: reflect_xy(points, self.value_center_point)))
 
         self.clipping_menu = tk.Menu(self.menu)
         self.menu.add_cascade(label="Clipping", menu=self.clipping_menu)
@@ -115,8 +134,28 @@ class Application:
         self.window.mainloop()
 
     """
-        Evento para pegar o ponto origem que será utilizado para as 
-        funções de transformação no decorrer da interface.
+        Transforma os pontos existentes no canvas de acordo com a função de transformação fornecida
+        e desenha os pontos transformados no canvas.
+
+        Args:
+            transformation_function: Função de transformação que recebe uma lista de pontos
+                                    e retorna uma lista de pontos transformados.
+    """
+    def transform_and_drawn(self, transformation_function):
+        points = self.canvas.find_all()
+        existing_points = [(self.canvas.coords(point)[0], self.canvas.coords(point)[1]) for point in points]
+
+        transformed_points = transformation_function(existing_points)
+
+        self.clear_canvas()
+        for x, y in transformed_points:
+            self.canvas.create_oval(x, y, x + 1, y + 1, fill="black")
+
+    """
+        Define as coordenadas do ponto central para transformações de acordo com o evento de clique no canvas.
+
+        Args:
+            event: O evento do mouse contendo as coordenadas x e y do ponto clicado.
     """
     def central_coords(self, event):
         x = event.x
@@ -125,12 +164,12 @@ class Application:
         self.value_center_point = (x, y)
         self.center_point_text.set(f"Ponto origem selecionado: {self.value_center_point}")
 
-    '''
-        Evento de pegar clique no canvas e setar os pontos selecionados.
-        O primeiro clique preenche valores da variavel value_first_point
-        o segundo preenche value_second_point e os próximos cliques seguem
-        a ordem value_first_point -> value_second_point.
-    '''
+    """
+        Obtém as coordenadas dos pontos 1 e 2 para desenhar linhas de acordo com o evento de clique no canvas.
+
+        Args:
+            event: O evento do mouse contendo as coordenadas x e y do ponto clicado.
+    """
     def get_coordinates(self, event):
         x = event.x
         y = event.y
@@ -143,12 +182,12 @@ class Application:
             self.second_point_text.set(f"Ponto 2: {self.value_second_point}")
         self.point_count += 1
     
-    '''
-        Evento de pegar clique no canvas e setar os pontos selecionados.
-        O primeiro clique preenche valores da variavel value_rectangle_first
-        o segundo preenche value_rectangle_second e os próximos cliques seguem
-        a ordem value_rectangle_first -> value_rectangle_second.
-    '''
+    """
+        Obtém as coordenadas dos pontos do retângulo para desenhar retângulos de acordo com o evento de clique no canvas.
+
+        Args:
+            event: O evento do mouse contendo as coordenadas x e y do ponto clicado.
+    """
     def get_coordinates_rectangle(self, event):
         x = event.x
         y = event.y
@@ -161,9 +200,8 @@ class Application:
             self.rectangle_second_point_text.set(f"Ponto 2 do retângulo: {self.value_rectangle_second}")
         self.rectangle_point_count += 1
 
-    '''
-        Função usada para limpar toda a tela de desenhos feita pelo
-        usuário.
-    '''
+    """
+        Limpa o canvas, removendo todos os elementos desenhados.
+    """
     def clear_canvas(self):
         self.canvas.delete("all")

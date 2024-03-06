@@ -35,13 +35,3 @@ class FunctionsCaller:
         y_limits = (min(rectangle_coords_first[1], rectangle_coords_second[1]), max(rectangle_coords_first[1], rectangle_coords_second[1]))
         clipped_start_point, clipped_end_point = clipping_liang_barsky(first_point, second_point, x_limits, y_limits)
         canvas.create_line(clipped_start_point[0], clipped_start_point[1], clipped_end_point[0], clipped_end_point[1], fill="blue", width=2)
-    
-    def transform_and_drawn(self, canvas, transformation_function):
-        points = canvas.find_all()
-
-        existing_points = [(canvas.coords(point)[0], canvas.coords(point)[1]) for point in points]
-        transformed_points = transformation_function(existing_points)
-
-        canvas.delete("all")
-        for x, y in transformed_points:
-            canvas.create_oval(x - 2, y - 2, x + 2, y + 2, fill="black")

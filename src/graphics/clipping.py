@@ -147,4 +147,5 @@ def clipping_liang_barsky(first_point: tuple, second_point: tuple, x_limits: tup
         if u1 > 0:
             x1 = int(x1 + (u1 * dx))
             y1 = int(y1 + (u1 * dy))
-    return (x1, y1), (x2, y2)
+        return True, (x1, y1), (x2, y2)
+    return False, (x1, y1), (x2, y2)

@@ -33,5 +33,8 @@ class FunctionsCaller:
 
         x_limits = (min(rectangle_coords_first[0], rectangle_coords_second[0]), max(rectangle_coords_first[0], rectangle_coords_second[0]))
         y_limits = (min(rectangle_coords_first[1], rectangle_coords_second[1]), max(rectangle_coords_first[1], rectangle_coords_second[1]))
-        clipped_start_point, clipped_end_point = clipping_liang_barsky(first_point, second_point, x_limits, y_limits)
-        canvas.create_line(clipped_start_point[0], clipped_start_point[1], clipped_end_point[0], clipped_end_point[1], fill="blue", width=2)
+        is_accepted, clipped_start_point, clipped_end_point = clipping_liang_barsky(first_point, second_point, x_limits, y_limits)
+        if is_accepted:
+            canvas.create_line(clipped_start_point[0], clipped_start_point[1], clipped_end_point[0], clipped_end_point[1], fill="blue", width=2)
+            print("Recorte feito com sucesso.")
+        else: print("Recorte não pode ser efetuado.")

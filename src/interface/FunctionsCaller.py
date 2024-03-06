@@ -1,5 +1,5 @@
 from graphics.circle import circle_bresenham
-from graphics.clipping import clipping_cohen_sutherland
+from graphics.clipping import clipping_cohen_sutherland, clipping_liang_barsky
 from graphics.rasterization import line_bresenham, line_dda
 
 class FunctionsCaller:
@@ -27,3 +27,11 @@ class FunctionsCaller:
             canvas.create_line(clipped_start_point[0], clipped_start_point[1], clipped_end_point[0], clipped_end_point[1], fill="blue", width=2)
             print("Recorte feito com sucesso.")
         else: print("Recorte não pode ser efetuado.")
+
+    def caller_clipping_liang_barsky(self, canvas, first_point: tuple, second_point: tuple, rectangle_coords_first: tuple, rectangle_coords_second: tuple) -> None:
+        self.draw_rectangle_overlay(canvas, rectangle_coords_first, rectangle_coords_second)
+
+        x_limits = (min(rectangle_coords_first[0], rectangle_coords_second[0]), max(rectangle_coords_first[0], rectangle_coords_second[0]))
+        y_limits = (min(rectangle_coords_first[1], rectangle_coords_second[1]), max(rectangle_coords_first[1], rectangle_coords_second[1]))
+        clipped_start_point, clipped_end_point = clipping_liang_barsky(first_point, second_point, x_limits, y_limits)
+        canvas.create_line(clipped_start_point[0], clipped_start_point[1], clipped_end_point[0], clipped_end_point[1], fill="blue", width=2)

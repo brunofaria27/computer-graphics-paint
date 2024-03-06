@@ -39,7 +39,7 @@ def region_code(x: int, y: int, x_min: int, x_max: int, y_min: int, y_max: int) 
             - Uma tupla contendo as coordenadas (x, y) do ponto de início recortado.
             - Uma tupla contendo as coordenadas (x, y) do ponto final recortado.
 '''
-def clipping_cohen_sutherland(first_point: tuple, second_point: tuple, x_limits: tuple, y_limits: tuple) -> tuple:
+def clipping_cohen_sutherland(first_point: tuple, second_point: tuple, x_limits: tuple, y_limits: tuple) -> tuple[bool, tuple, tuple]:
     x1, y1 = first_point
     x2, y2 = second_point
     x_min, x_max = x_limits
@@ -75,3 +75,76 @@ def clipping_cohen_sutherland(first_point: tuple, second_point: tuple, x_limits:
 
     return is_accepted, (x1, y1), (x2, y2)
  
+"""
+    Função para determinar se uma linha definida pelos coeficientes de sua equação
+    paramétrica p*t + q cruza uma região de corte definida por u1 e u2.
+
+    Args:
+        p (int): Coeficiente que descreve a mudança de coordenada x.
+        q (int): Coeficiente que descreve a mudança de coordenada y.
+        u1 (int): Parâmetro que representa o ponto de entrada da interseção.
+        u2 (int): Parâmetro que representa o ponto de saída da interseção.
+
+    Returns:
+        tuple[bool, int, int]: Uma tupla contendo um valor booleano indicando se
+        houve ou não interseção, juntamente com os valores atualizados de u1 e u2.
+    """
+def clip_test(p: int, q: int, u1: int, u2: int) -> tuple[bool, int, int]:
+    result = True
+    r = 0
+
+    if p < 0:
+        r = q / p
+        if r > u2:
+            result = False
+        elif r > u1:
+            u1 = r
+    elif p > 0:
+        r = q / p
+        if r < u1:
+            result = False
+        elif r < u2:
+            u2 = r
+    else:
+        if q < 0:
+            result = False
+    return result, u1, u2
+
+"""
+    Função que realiza o algoritmo de clipping de Liang-Barsky para recortar uma linha
+    definida pelos pontos first_point e second_point em relação aos limites definidos
+    por x_limits e y_limits.
+
+    Args:
+        first_point (tuple): As coordenadas do primeiro ponto da linha (x1, y1).
+        second_point (tuple): As coordenadas do segundo ponto da linha (x2, y2).
+        x_limits (tuple): Um par ordenado representando os limites em x (x_min, x_max).
+        y_limits (tuple): Um par ordenado representando os limites em y (y_min, y_max).
+
+    Returns:
+        tuple[tuple, tuple]: Uma tupla contendo as coordenadas dos pontos resultantes
+        após o recorte da linha em relação aos limites.
+    """
+def clipping_liang_barsky(first_point: tuple, second_point: tuple, x_limits: tuple, y_limits: tuple) -> tuple[tuple, tuple]:
+    x1, y1 = first_point
+    x2, y2 = second_point
+    x_min, x_max = x_limits
+    y_min, y_max = y_limits
+    u1 = 0
+    u2 = 1
+    dx = x2 - x1
+    dy = y2 - y1
+
+    result_first_if, u1, u2 = clip_test(-dx, x1 - x_min, u1, u2)
+    result_second_if, u1, u2 = clip_test(dx, x_max - x1, u1, u2)
+    result_third_if, u1, u2 = clip_test(-dy, y1 - y_min, u1, u2)
+    result_fourth_if, u1, u2 = clip_test(dy, y_max - y1, u1, u2)
+    
+    if result_first_if and result_second_if and result_third_if and result_fourth_if:
+        if u2 < 1:
+            x2 = int(x1 + (u2 * dx))
+            y2 = int(y1 + (u2 * dy))
+        if u1 > 0:
+            x1 = int(x1 + (u1 * dx))
+            y1 = int(y1 + (u1 * dy))
+    return (x1, y1), (x2, y2)

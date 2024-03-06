@@ -79,7 +79,7 @@ class Application:
         self.clipping_menu = tk.Menu(self.menu)
         self.menu.add_cascade(label="Clipping", menu=self.clipping_menu)
         self.clipping_menu.add_command(label="Cohen-Sutherland", command=lambda: functions_caller.caller_clipping_cohen_sutherland(self.canvas, self.value_first_point, self.value_second_point, self.value_rectangle_first, self.value_rectangle_second))
-        self.clipping_menu.add_command(label="Liang-Barsky", command=lambda: functions_caller.caller_clipping_cohen_sutherland(self.canvas, self.value_first_point, self.value_second_point, (0, 0), (0, 0)))
+        self.clipping_menu.add_command(label="Liang-Barsky", command=lambda: functions_caller.caller_clipping_liang_barsky(self.canvas, self.value_first_point, self.value_second_point, self.value_rectangle_first, self.value_rectangle_second))
 
         self.clear_canvas_menu = tk.Menu(self.menu)
         self.menu.add_cascade(label="Funções", menu=self.clear_canvas_menu)

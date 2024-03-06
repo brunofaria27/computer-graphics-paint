@@ -75,8 +75,8 @@ def scale(points, scale_factor, center):
         Uma lista de pontos refletidos.
 """
 def reflect_x(points, center):
-    _, cy = center
-    reflected_points = [(x, 2 * cy - y) for x, y in points]
+    cx, _ = center
+    reflected_points = [(2 * cx - x, y) for x, y in points]
     return reflected_points
 
 """
@@ -90,8 +90,8 @@ def reflect_x(points, center):
         Uma lista de pontos refletidos.
 """
 def reflect_y(points, center):
-    cx, _ = center
-    reflected_points = [(2 * cx - x, y) for x, y in points]
+    _, cy = center
+    reflected_points = [(x, 2 * cy - y) for x, y in points]
     return reflected_points
 
 """

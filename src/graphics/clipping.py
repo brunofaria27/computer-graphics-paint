@@ -89,24 +89,24 @@ def clipping_cohen_sutherland(first_point: tuple, second_point: tuple, x_limits:
         tuple[bool, int, int]: Uma tupla contendo um valor booleano indicando se
         houve ou não interseção, juntamente com os valores atualizados de u1 e u2.
     """
-def clip_test(p: int, q: int, u1: int, u2: int) -> tuple[bool, int, int]:
+def clip_test(p: float, q: float, u1: float, u2: float) -> tuple[bool, float, float]:
     result = True
-    r = 0
+    r = 0.0
 
-    if p < 0:
+    if p < 0.0:
         r = q / p
         if r > u2:
             result = False
         elif r > u1:
             u1 = r
-    elif p > 0:
+    elif p > 0.0:
         r = q / p
         if r < u1:
             result = False
         elif r < u2:
             u2 = r
     else:
-        if q < 0:
+        if q < 0.0:
             result = False
     return result, u1, u2
 
@@ -130,8 +130,8 @@ def clipping_liang_barsky(first_point: tuple, second_point: tuple, x_limits: tup
     x2, y2 = second_point
     x_min, x_max = x_limits
     y_min, y_max = y_limits
-    u1 = 0
-    u2 = 1
+    u1 = 0.0
+    u2 = 1.0
     dx = x2 - x1
     dy = y2 - y1
 
@@ -141,10 +141,10 @@ def clipping_liang_barsky(first_point: tuple, second_point: tuple, x_limits: tup
     result_fourth_if, u1, u2 = clip_test(dy, y_max - y1, u1, u2)
     
     if result_first_if and result_second_if and result_third_if and result_fourth_if:
-        if u2 < 1:
+        if u2 < 1.0:
             x2 = int(x1 + (u2 * dx))
             y2 = int(y1 + (u2 * dy))
-        if u1 > 0:
+        if u1 > 0.0:
             x1 = int(x1 + (u1 * dx))
             y1 = int(y1 + (u1 * dy))
         return True, (x1, y1), (x2, y2)

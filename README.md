@@ -17,6 +17,6 @@ A aplicação foi feita com o intuito de abordar o seguintes algoritmos de compu
     - Regiões codificadas:
         - Cohen-Sutherland ✔️
     - Equação paramétrica:
-        - Liang-Barsky ✔-> Change to float 
+        - Liang-Barsky ✔️
 ------
 ### Estrutura da aplicação

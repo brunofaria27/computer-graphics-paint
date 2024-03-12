@@ -87,7 +87,7 @@ def scale(start_point, end_point, scale_factor, center):
 """
 def reflect_x(start_point, end_point, center=None):
     if center is None:
-        center = (0, 0)
+        center = (482, 257)
     _, cy = center
     reflected_start_point = (start_point[0], 2 * cy - start_point[1])
     reflected_end_point = (end_point[0], 2 * cy - end_point[1])
@@ -106,7 +106,7 @@ def reflect_x(start_point, end_point, center=None):
 """
 def reflect_y(start_point, end_point, center=None):
     if center is None:
-        center = (0, 0)
+        center = (482, 257)
     cx, _ = center
     reflected_start_point = (2 * cx - start_point[0], start_point[1])
     reflected_end_point = (2 * cx - end_point[0], end_point[1])
@@ -125,7 +125,7 @@ def reflect_y(start_point, end_point, center=None):
 """
 def reflect_xy(start_point, end_point, center=None):
     if center is None:
-        center = (0, 0)
+        center = (482, 257)
     cx, cy = center
     reflected_start_point = (2 * cx - start_point[0], 2 * cy - start_point[1])
     reflected_end_point = (2 * cx - end_point[0], 2 * cy - end_point[1])

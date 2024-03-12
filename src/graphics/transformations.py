@@ -127,6 +127,6 @@ def reflect_xy(start_point, end_point, center=None):
     if center is None:
         center = (0, 0)
     cx, cy = center
-    reflected_start_point = (2 * cx - start_point[1], 2 * cy - start_point[0])
-    reflected_end_point = (2 * cx - end_point[1], 2 * cy - end_point[0])
+    reflected_start_point = (2 * cx - start_point[0], 2 * cy - start_point[1])
+    reflected_end_point = (2 * cx - end_point[0], 2 * cy - end_point[1])
     return reflected_start_point, reflected_end_point

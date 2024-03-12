@@ -97,7 +97,7 @@ class Application:
         self.rectangle_point_count = 0
 
         # Inicializar objetos importantes
-        functions_caller = FunctionsCaller()
+        self.functions_caller = FunctionsCaller()
 
         # Opções do menu
         self.menu = tk.Menu(window)
@@ -105,23 +105,23 @@ class Application:
 
         self.rasterization_menu = tk.Menu(self.menu)
         self.menu.add_cascade(label="Rasterização", menu=self.rasterization_menu)
-        self.rasterization_menu.add_command(label="DDA", command=lambda: functions_caller.caller_line_dda(self.canvas, self.value_first_point, self.value_second_point))
-        self.rasterization_menu.add_command(label="Bresenham retas", command=lambda: functions_caller.caller_line_bresenham(self.canvas, self.value_first_point, self.value_second_point))
-        self.rasterization_menu.add_command(label="Bresenham circunferência", command=lambda: functions_caller.caller_circle_bresenham(self.canvas, self.value_first_point, int(self.radius_scale.get())))
+        self.rasterization_menu.add_command(label="DDA", command=lambda: self.functions_caller.caller_line_dda(self.canvas, self.value_first_point, self.value_second_point))
+        self.rasterization_menu.add_command(label="Bresenham retas", command=lambda: self.functions_caller.caller_line_bresenham(self.canvas, self.value_first_point, self.value_second_point))
+        self.rasterization_menu.add_command(label="Bresenham circunferência", command=lambda: self.functions_caller.caller_circle_bresenham(self.canvas, self.value_first_point, int(self.radius_scale.get())))
 
         self.transformation_menu = tk.Menu(self.menu)
         self.menu.add_cascade(label="Transformações geométricas", menu=self.transformation_menu)
-        self.transformation_menu.add_command(label="Translação", command=lambda: self.transform_and_drawn(lambda points: translate(points, int(self.dx_scale.get()), int(self.dy_scale.get()))))
-        self.transformation_menu.add_command(label="Rotação", command=lambda: self.transform_and_drawn(lambda points: rotate(points, int(self.angle_transformation_scale.get()), self.value_center_point)))
-        self.transformation_menu.add_command(label="Escala", command=lambda: self.transform_and_drawn(lambda points: scale(points, float(self.scale_factor_entry.get()), self.value_center_point)))
-        self.transformation_menu.add_command(label="Reflexão X", command=lambda: self.transform_and_drawn(lambda points: reflect_x(points)))
-        self.transformation_menu.add_command(label="Reflexão Y", command=lambda: self.transform_and_drawn(lambda points: reflect_y(points)))
-        self.transformation_menu.add_command(label="Reflexão XY", command=lambda: self.transform_and_drawn(lambda points: reflect_xy(points)))
+        self.transformation_menu.add_command(label="Translação", command=lambda: self.transform_and_drawn(translate, int(self.dx_scale.get()), int(self.dy_scale.get())))
+        self.transformation_menu.add_command(label="Rotação", command=lambda: self.transform_and_drawn(rotate, int(self.angle_transformation_scale.get()), self.value_center_point))
+        self.transformation_menu.add_command(label="Escala", command=lambda: self.transform_and_drawn(scale, float(self.scale_factor_entry.get()), self.value_center_point))
+        self.transformation_menu.add_command(label="Reflexão X", command=lambda: self.transform_and_drawn(reflect_x, self.value_center_point))
+        self.transformation_menu.add_command(label="Reflexão Y", command=lambda: self.transform_and_drawn(reflect_y, self.value_center_point))
+        self.transformation_menu.add_command(label="Reflexão XY", command=lambda: self.transform_and_drawn(reflect_xy, self.value_center_point))
 
         self.clipping_menu = tk.Menu(self.menu)
         self.menu.add_cascade(label="Clipping", menu=self.clipping_menu)
-        self.clipping_menu.add_command(label="Cohen-Sutherland", command=lambda: functions_caller.caller_clipping_cohen_sutherland(self.canvas, self.value_first_point, self.value_second_point, self.value_rectangle_first, self.value_rectangle_second))
-        self.clipping_menu.add_command(label="Liang-Barsky", command=lambda: functions_caller.caller_clipping_liang_barsky(self.canvas, self.value_first_point, self.value_second_point, self.value_rectangle_first, self.value_rectangle_second))
+        self.clipping_menu.add_command(label="Cohen-Sutherland", command=lambda: self.functions_caller.caller_clipping_cohen_sutherland(self.canvas, self.value_first_point, self.value_second_point, self.value_rectangle_first, self.value_rectangle_second))
+        self.clipping_menu.add_command(label="Liang-Barsky", command=lambda: self.functions_caller.caller_clipping_liang_barsky(self.canvas, self.value_first_point, self.value_second_point, self.value_rectangle_first, self.value_rectangle_second))
 
         self.clear_canvas_menu = tk.Menu(self.menu)
         self.menu.add_cascade(label="Funções", menu=self.clear_canvas_menu)
@@ -141,15 +141,12 @@ class Application:
             transformation_function: Função de transformação que recebe uma lista de pontos
                                     e retorna uma lista de pontos transformados.
     """
-    def transform_and_drawn(self, transformation_function):
-        points = self.canvas.find_all()
-        existing_points = [(self.canvas.coords(point)[0], self.canvas.coords(point)[1]) for point in points]
-
-        transformed_points = transformation_function(existing_points)
-
+    def transform_and_drawn(self, transformation_function, *args):
+        transformed_start_point, transformed_end_point = transformation_function(self.value_first_point, self.value_second_point, *args)
         self.clear_canvas()
-        for x, y in transformed_points:
-            self.canvas.create_oval(x, y, x + 1, y + 1, fill="black")
+        self.functions_caller.caller_line_dda(self.canvas, transformed_start_point, transformed_end_point)
+        self.value_first_point = transformed_start_point
+        self.value_second_point = transformed_end_point
 
     """
         Define as coordenadas do ponto central para transformações de acordo com o evento de clique no canvas.

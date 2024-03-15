@@ -92,7 +92,7 @@ class Application:
         self.value_second_point = tuple()
         self.value_rectangle_first = tuple()
         self.value_rectangle_second = tuple()
-        self.value_center_point = tuple()
+        self.value_center_point = None
         self.point_count = 0
         self.rectangle_point_count = 0
 

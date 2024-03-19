@@ -54,13 +54,22 @@ class Application:
         self.angle_transformation_scale.grid(row=2, column=1)
 
         # Entrada fator de escala
-        self.scale_factor = tk.Frame(self.window)
-        self.scale_factor.pack()
+        self.scale_factor_x = tk.Frame(self.window)
+        self.scale_factor_x.pack()
 
-        self.scale_factor_label = tk.Label(self.scale_factor, text="Fator da escala:")
-        self.scale_factor_label.grid(row=4, column=0)
-        self.scale_factor_entry = tk.Entry(self.scale_factor)
-        self.scale_factor_entry.grid(row=4, column=1)
+        self.scale_factor_x_label = tk.Label(self.scale_factor_x, text="Fator da escala X:")
+        self.scale_factor_x_label.grid(row=4, column=0)
+        self.scale_factor_x_entry = tk.Entry(self.scale_factor_x)
+        self.scale_factor_x_entry.grid(row=4, column=1)
+
+        # Entrada fator de escala
+        self.scale_factor_y = tk.Frame(self.window)
+        self.scale_factor_y.pack()
+
+        self.scale_factor_y_label = tk.Label(self.scale_factor_y, text="Fator da escala Y:")
+        self.scale_factor_y_label.grid(row=4, column=0)
+        self.scale_factor_y_entry = tk.Entry(self.scale_factor_y)
+        self.scale_factor_y_entry.grid(row=4, column=1)
 
         # Criar o canvas com borda
         self.canvas = tk.Canvas(self.window, bg="white", width=canvas_width, height=canvas_height, bd=2, relief="ridge")
@@ -113,7 +122,7 @@ class Application:
         self.menu.add_cascade(label="Transformações geométricas", menu=self.transformation_menu)
         self.transformation_menu.add_command(label="Translação", command=lambda: self.transform_and_drawn(translate, int(self.dx_scale.get()), int(self.dy_scale.get())))
         self.transformation_menu.add_command(label="Rotação", command=lambda: self.transform_and_drawn(rotate, int(self.angle_transformation_scale.get()), self.value_center_point))
-        self.transformation_menu.add_command(label="Escala", command=lambda: self.transform_and_drawn(scale, float(self.scale_factor_entry.get()), self.value_center_point))
+        self.transformation_menu.add_command(label="Escala", command=lambda: self.transform_and_drawn(scale, float(self.scale_factor_x_entry.get()), float(self.scale_factor_y_entry.get()), self.value_center_point))
         self.transformation_menu.add_command(label="Reflexão X", command=lambda: self.transform_and_drawn(reflect_x, self.value_center_point))
         self.transformation_menu.add_command(label="Reflexão Y", command=lambda: self.transform_and_drawn(reflect_y, self.value_center_point))
         self.transformation_menu.add_command(label="Reflexão XY", command=lambda: self.transform_and_drawn(reflect_xy, self.value_center_point))

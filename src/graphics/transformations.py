@@ -30,6 +30,8 @@ def translate(start_point, end_point, tx, ty):
         Uma tupla contendo os pontos rotacionados (start_point, end_point).
 """
 def rotate(start_point, end_point, angle, center):
+    if center is None:
+        center = (482, 257)
     cx, cy = center
     radians = math.radians(angle)
     cos_theta = math.cos(radians)
@@ -62,12 +64,14 @@ def rotate(start_point, end_point, angle, center):
     Returns:
         Uma tupla contendo os pontos escalados (start_point, end_point).
 """
-def scale(start_point, end_point, scale_factor, center):
+def scale(start_point, end_point, scale_factor_x, scale_factor_y, center):
+    if center is None:
+        center = (482, 257)
     cx, cy = center
-    scaled_start_x = (start_point[0] - cx) * scale_factor + cx
-    scaled_start_y = (start_point[1] - cy) * scale_factor + cy
-    scaled_end_x = (end_point[0] - cx) * scale_factor + cx
-    scaled_end_y = (end_point[1] - cy) * scale_factor + cy
+    scaled_start_x = (start_point[0] - cx) * scale_factor_x + cx
+    scaled_start_y = (start_point[1] - cy) * scale_factor_y + cy
+    scaled_end_x = (end_point[0] - cx) * scale_factor_x + cx
+    scaled_end_y = (end_point[1] - cy) * scale_factor_y + cy
     
     scaled_start_point = (scaled_start_x, scaled_start_y)
     scaled_end_point = (scaled_end_x, scaled_end_y)

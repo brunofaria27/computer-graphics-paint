@@ -18,5 +18,3 @@ A aplicação foi feita com o intuito de abordar o seguintes algoritmos de compu
         - Cohen-Sutherland ✔️
     - Equação paramétrica:
         - Liang-Barsky ✔️
-------
-### Estrutura da aplicação
